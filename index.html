@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Spark Painters - Mobile Document Control Engine</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Hidden CDN Assets for PDF Generation -->
+    <div style="display: none;">
+        <img id="companyLogo" src="https://raw.githubusercontent.com/SabariVivek/my-bible/ad0fc425c32f7414c8e48f970c940820713eb15f/resources/icons/Logo.png?v=1" alt="Spark Logo" crossorigin="anonymous">
+        <img id="companySign" src="https://raw.githubusercontent.com/SabariVivek/my-bible/main/resources/icons/Sign.png?v=1" alt="Spark Sign" crossorigin="anonymous">
+    </div>
+
+    <!-- Mobile App Container -->
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand-section">
+                <div class="brand-info">
+                    <img src="https://raw.githubusercontent.com/SabariVivek/my-bible/ad0fc425c32f7414c8e48f970c940820713eb15f/resources/icons/Logo.png?v=1" class="brand-logo" alt="Logo">
+                    <div>
+                        <h1 class="brand-title">Spark Painters</h1>
+                        <p class="brand-subtitle">Mobile Billing Engine</p>
+                    </div>
+                </div>
+                <button type="button" onclick="openHistoryModal()" class="btn-icon" title="Saved Drafts">
+                    📁
+                </button>
+            </div>
+
+            <div class="header-controls">
+                <div class="profile-select-badge">
+                    <span>Profile:</span>
+                    <select id="documentType" onchange="handleDocProfileChange()">
+                        <option value="QUOTATION" selected>QUOTATION</option>
+                        <option value="INVOICE">INVOICE</option>
+                        <option value="CASH BILL">CASH BILL</option>
+                    </select>
+                </div>
+                <div class="bill-no-box" id="billNoContainer">
+                    <span>Bill #:</span>
+                    <input type="text" id="manualBillNo" placeholder="030">
+                </div>
+            </div>
+        </header>
+
+        <!-- Stepper Node Progress Tracker -->
+        <div class="wizard-progress">
+            <div class="progress-step active" id="step_indicator_1" onclick="jumpToStep(1)">
+                <div class="progress-node">1</div>
+                <span class="progress-label">Client</span>
+            </div>
+            <div class="progress-step" id="step_indicator_2" onclick="jumpToStep(2)">
+                <div class="progress-node">2</div>
+                <span class="progress-label">Items</span>
+            </div>
+            <div class="progress-step" id="step_indicator_3" onclick="jumpToStep(3)">
+                <div class="progress-node">3</div>
+                <span class="progress-label">Notes</span>
+            </div>
+            <div class="progress-step" id="step_indicator_4" onclick="jumpToStep(4)">
+                <div class="progress-node">4</div>
+                <span class="progress-label">Terms</span>
+            </div>
+            <div class="progress-step" id="step_indicator_5" onclick="jumpToStep(5)">
+                <div class="progress-node">5</div>
+                <span class="progress-label">Ledger</span>
+            </div>
+        </div>
+
+        <form id="billingForm" onsubmit="event.preventDefault();">
+
+            <!-- STEP 1: Client Recipient Registry -->
+            <div class="wizard-page active-page" id="step_1">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon">👤</span> Customer Recipient Details
+                        </h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="docDate">Date of Issuance (DD-MM-YYYY)</label>
+                        <input type="text" id="docDate" placeholder="DD-MM-YYYY" pattern="\d{2}-\d{2}-\d{4}" title="Please enter date in DD-MM-YYYY format" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientName">Customer Name</label>
+                        <input type="text" id="clientName" placeholder="Enter recipient name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clientAddress">Customer Address</label>
+                        <textarea id="clientAddress" placeholder="Enter customer street address & location details" style="min-height: 80px; resize: vertical;" required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Line Item Specifications -->
+            <div class="wizard-page" id="step_2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon">🎨</span> Line Items Specifications
+                        </h2>
+                        <button type="button" onclick="insertItemRow()" class="btn-add-sm">＋ Add Item</button>
+                    </div>
+
+                    <!-- Common Painting Item Presets -->
+                    <div class="preset-section">
+                        <div class="preset-title">Quick Add Painting Services</div>
+                        <div class="preset-pills">
+                            <span class="preset-pill" onclick="addPresetItem('Interior Painting', 'Sq.Ft', 18)">Interior Painting</span>
+                            <span class="preset-pill" onclick="addPresetItem('Exterior Emulsion', 'Sq.Ft', 22)">Exterior Emulsion</span>
+                            <span class="preset-pill" onclick="addPresetItem('Wall Primer Coating', 'Sq.Ft', 10)">Primer Coating</span>
+                            <span class="preset-pill" onclick="addPresetItem('Wood & Door Polish', 'Sq.Ft', 45)">Wood Polish</span>
+                            <span class="preset-pill" onclick="addPresetItem('Waterproofing Service', 'Sq.Ft', 35)">Waterproofing</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Mobile Items List -->
+                    <div id="mobileItemContainer" class="item-cards-list"></div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Execution Notes -->
+            <div class="wizard-page" id="step_3">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon">📝</span> Execution Notes
+                        </h2>
+                    </div>
+
+                    <!-- Preset Note Templates -->
+                    <div class="preset-section">
+                        <div class="preset-title">Quick Notes Templates</div>
+                        <div class="preset-pills">
+                            <span class="preset-pill" onclick="appendNotePreset('• Surface preparation & crack filling included.')">+ Surface Prep</span>
+                            <span class="preset-pill" onclick="appendNotePreset('• Scaffolding and safety gear included.')">+ Scaffolding</span>
+                            <span class="preset-pill" onclick="appendNotePreset('• 2 coats of premium primer + 2 coats of emulsion.')">+ 2 Coats Spec</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customProjectNotes">Project Notes (Supports Line Breaks)</label>
+                        <textarea id="customProjectNotes" placeholder="Enter special item descriptions or execution notes here..." style="min-height: 140px; resize: vertical;"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: Terms & Disclaimers -->
+            <div class="wizard-page" id="step_4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon">📋</span> Terms & Conditions
+                        </h2>
+                        <button type="button" onclick="insertCustomClauseRow()" class="btn-add-sm">＋ Add Condition</button>
+                    </div>
+
+                    <div id="clausesDynamicList">
+                        <div class="clause-card active" id="clauseWrap_payment">
+                            <label class="clause-header">
+                                <input type="checkbox" class="clause-checkbox" id="chk_payment" checked onchange="toggleClause('payment')">
+                                <span class="clause-title">1. Payment Terms</span>
+                            </label>
+                            <div class="clause-input-box" id="inp_payment">
+                                <input type="text" id="termPayment" value="60% upfront payment balance upon completion">
+                            </div>
+                        </div>
+
+                        <div class="clause-card active" id="clauseWrap_hours">
+                            <label class="clause-header">
+                                <input type="checkbox" class="clause-checkbox" id="chk_hours" checked onchange="toggleClause('hours')">
+                                <span class="clause-title">2. Working Hours</span>
+                            </label>
+                            <div class="clause-input-box" id="inp_hours">
+                                <input type="text" id="termHours" value="Monday to Saturday: 10:00 AM to 06:00 PM">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5: Financial Matrix & Export -->
+            <div class="wizard-page" id="step_5">
+                <div class="card ledger-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon" style="background:#1e293b; color:#34d399;">💳</span> Accounting Matrix
+                        </h2>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="uiSubtotal">₹0.00</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Discount (Rs.)</span>
+                        <input type="number" id="uiDiscount" value="0" min="0" oninput="processFinancialMatrix()">
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Tax / GST Rate (%)</span>
+                        <input type="number" id="uiTaxRate" value="0" min="0" oninput="processFinancialMatrix()">
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Calculated Tax</span>
+                        <span id="uiTaxVal">₹0.00</span>
+                    </div>
+
+                    <div class="summary-row grand-total-row">
+                        <span>Grand Total</span>
+                        <span id="uiGrandTotal" class="grand-total-val">₹0.00</span>
+                    </div>
+                </div>
+
+                <!-- Action Options -->
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                    <button type="button" onclick="previewDocumentPDF()" class="btn btn-secondary">
+                        👁️ Live PDF Preview
+                    </button>
+                    <button type="button" onclick="shareDocumentPDF()" class="btn btn-outline">
+                        📲 Share PDF (WhatsApp / Apps)
+                    </button>
+                    <button type="button" onclick="saveCurrentBillDraft()" class="btn btn-secondary">
+                        💾 Save to Mobile History
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Bottom Action Drawer -->
+    <div class="bottom-drawer">
+        <div class="bottom-drawer-inner">
+            <button type="button" id="btnBack" onclick="navigateWizardStep(-1)" class="btn btn-secondary" style="visibility: hidden;">
+                Back
+            </button>
+            <button type="button" id="btnNext" onclick="navigateWizardStep(1)" class="btn btn-primary">
+                Next Step
+            </button>
+        </div>
+    </div>
+
+    <!-- Live PDF Preview Modal -->
+    <div class="modal-overlay" id="pdfPreviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">PDF Preview</h3>
+                <button type="button" onclick="closeModal('pdfPreviewModal')" class="btn-icon">✕</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfPreviewFrame" class="pdf-preview-iframe" title="PDF Preview"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="generateDocumentPDF()" class="btn btn-primary">
+                    ⬇️ Download PDF
+                </button>
+                <button type="button" onclick="closeModal('pdfPreviewModal')" class="btn btn-secondary">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drafts / History Modal -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Saved Bills History</h3>
+                <button type="button" onclick="closeModal('historyModal')" class="btn-icon">✕</button>
+            </div>
+            <div class="modal-body" id="historyListContainer">
+                <p style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No saved bills yet.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeModal('historyModal')" class="btn btn-secondary">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

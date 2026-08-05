@@ -1,0 +1,6 @@
+{
+  "appId": "com.sparkpainters.billingapp",
+  "appName": "Spark Painters Billing",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
