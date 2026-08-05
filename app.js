@@ -7,6 +7,25 @@ import { COMPANY_LOGO_BASE64, COMPANY_SIGN_BASE64 } from './assets.js';
 let currentStep = 1;
 const totalSteps = 5;
 
+// Expose all controller functions to window immediately for inline HTML event handlers
+window.jumpToStep = jumpToStep;
+window.navigateWizardStep = navigateWizardStep;
+window.handleDocProfileChange = handleDocProfileChange;
+window.addPresetItem = addPresetItem;
+window.insertItemRow = insertItemRow;
+window.removeItemRow = removeItemRow;
+window.processFinancialMatrix = processFinancialMatrix;
+window.appendNotePreset = appendNotePreset;
+window.toggleClause = toggleClause;
+window.insertCustomClauseRow = insertCustomClauseRow;
+window.removeCustomClauseRow = removeCustomClauseRow;
+window.generateDocumentPDF = generateDocumentPDF;
+window.previewDocumentPDF = previewDocumentPDF;
+window.shareDocumentPDF = shareDocumentPDF;
+window.closeModal = closeModal;
+window.saveCurrentBillDraft = saveCurrentBillDraft;
+window.openHistoryModal = openHistoryModal;
+
 // Initial state setup
 window.addEventListener('DOMContentLoaded', () => {
     // Set today's date in DD-MM-YYYY format
@@ -851,22 +870,3 @@ function openHistoryModal() {
 
     document.getElementById('historyModal').classList.add('active');
 }
-
-// Bind functions to window for inline HTML handlers
-window.jumpToStep = jumpToStep;
-window.navigateWizardStep = navigateWizardStep;
-window.handleDocProfileChange = handleDocProfileChange;
-window.addPresetItem = addPresetItem;
-window.insertItemRow = insertItemRow;
-window.removeItemRow = removeItemRow;
-window.processFinancialMatrix = processFinancialMatrix;
-window.appendNotePreset = appendNotePreset;
-window.toggleClause = toggleClause;
-window.insertCustomClauseRow = insertCustomClauseRow;
-window.removeCustomClauseRow = removeCustomClauseRow;
-window.generateDocumentPDF = generateDocumentPDF;
-window.previewDocumentPDF = previewDocumentPDF;
-window.shareDocumentPDF = shareDocumentPDF;
-window.closeModal = closeModal;
-window.saveCurrentBillDraft = saveCurrentBillDraft;
-window.openHistoryModal = openHistoryModal;
