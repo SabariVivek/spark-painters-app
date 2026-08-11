@@ -3,13 +3,13 @@
   "name": "Spark Painters - Mobile Billing Engine",
   "icons": [
     {
-      "src": "https://raw.githubusercontent.com/SabariVivek/my-bible/ad0fc425c32f7414c8e48f970c940820713eb15f/resources/icons/Logo.png?v=1",
+      "src": "assets/icons/Logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://raw.githubusercontent.com/SabariVivek/my-bible/ad0fc425c32f7414c8e48f970c940820713eb15f/resources/icons/Logo.png?v=1",
+      "src": "assets/icons/Logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }

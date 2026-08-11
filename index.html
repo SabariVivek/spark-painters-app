@@ -13,7 +13,7 @@
 
     <!-- Hidden CDN Assets for PDF Generation -->
     <div style="display: none;">
-        <img id="companyLogo" src="https://raw.githubusercontent.com/SabariVivek/my-bible/ad0fc425c32f7414c8e48f970c940820713eb15f/resources/icons/Logo.png?v=1" alt="Spark Logo" crossorigin="anonymous">
+        <img id="companyLogo" src="assets/icons/Logo.png" alt="Spark Logo">
         <img id="companySign" src="https://raw.githubusercontent.com/SabariVivek/my-bible/main/resources/icons/Sign.png?v=1" alt="Spark Sign" crossorigin="anonymous">
     </div>
 
@@ -24,15 +24,12 @@
         <header class="app-header">
             <div class="brand-section">
                 <div class="brand-info">
-                    <img src="https://raw.githubusercontent.com/SabariVivek/my-bible/ad0fc425c32f7414c8e48f970c940820713eb15f/resources/icons/Logo.png?v=1" class="brand-logo" alt="Logo">
+                    <img src="assets/icons/Logo.png" class="brand-logo" alt="Logo">
                     <div>
                         <h1 class="brand-title">Spark Painters</h1>
                         <p class="brand-subtitle">Mobile Billing Engine</p>
                     </div>
                 </div>
-                <button type="button" onclick="openHistoryModal()" class="btn-icon" title="Saved Drafts">
-                    📁
-                </button>
             </div>
 
             <div class="header-controls">
@@ -227,14 +224,8 @@
 
                 <!-- Action Options -->
                 <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
-                    <button type="button" onclick="previewDocumentPDF()" class="btn btn-secondary">
-                        👁️ Live PDF Preview
-                    </button>
                     <button type="button" onclick="shareDocumentPDF()" class="btn btn-outline">
-                        📲 Share PDF (WhatsApp / Apps)
-                    </button>
-                    <button type="button" onclick="saveCurrentBillDraft()" class="btn btn-secondary">
-                        💾 Save to Mobile History
+                        📲 Share PDF
                     </button>
                 </div>
             </div>
@@ -275,23 +266,6 @@
         </div>
     </div>
 
-    <!-- Drafts / History Modal -->
-    <div class="modal-overlay" id="historyModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Saved Bills History</h3>
-                <button type="button" onclick="closeModal('historyModal')" class="btn-icon">✕</button>
-            </div>
-            <div class="modal-body" id="historyListContainer">
-                <p style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No saved bills yet.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" onclick="closeModal('historyModal')" class="btn btn-secondary">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
 
     <script src="dist/bundle.js"></script>
 </body>
