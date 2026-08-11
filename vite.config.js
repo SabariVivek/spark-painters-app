@@ -65,7 +65,21 @@ export default defineConfig({
           fs.copyFileSync('styles.css', 'dist/styles.css');
         }
 
-        // 2. Overwrite root index.html with a production version that loads
+        // 2. Copy assets/ folder into dist/ so local images (logo etc.) are bundled
+        if (fs.existsSync('assets')) {
+          const copyDir = (src, dest) => {
+            fs.mkdirSync(dest, { recursive: true });
+            for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+              const srcPath = src + '/' + entry.name;
+              const destPath = dest + '/' + entry.name;
+              if (entry.isDirectory()) copyDir(srcPath, destPath);
+              else fs.copyFileSync(srcPath, destPath);
+            }
+          };
+          copyDir('assets', 'dist/assets');
+        }
+
+        // 3. Overwrite root index.html with a production version that loads
         //    dist/bundle.js — this is what the user double-clicks in File Explorer.
         //    Standard <script src> (no type="module") works on file:// without CORS errors.
         const productionHtml = originalDevHtml.replace(
