@@ -499,13 +499,20 @@ function buildJsPDFDocument() {
     let tableHeaderY = currentY;
     currentY += 8;
 
-    const maxTableHeight = 72; 
+    const cards = document.querySelectorAll('#mobileItemContainer .item-card');
+    const rowHeight = 9;
+    const itemCount = cards.length;
+
+    // Reserve: 8mm (col header) + item rows + 14mm (Total/Grand Total) + 2mm padding
+    const minContentRows = 6;
+    const contentRows = Math.max(itemCount, minContentRows);
+    const maxTableHeight = 8 + (contentRows * rowHeight) + 14 + 2;
 
     // --- WATERMARK LOGO ---
     if (COMPANY_LOGO_BASE64) {
         try {
             pdfDoc.saveGraphicsState();
-            pdfDoc.setGState(new pdfDoc.GState({ opacity: 0.07 })); 
+            pdfDoc.setGState(new pdfDoc.GState({ opacity: 0.07 }));
             const watermarkW = 70;
             const watermarkH = 58;
             const watermarkX = startX + (widthTotal - watermarkW) / 2;
@@ -515,8 +522,6 @@ function buildJsPDFDocument() {
         } catch(e) {}
     }
 
-    const cards = document.querySelectorAll('#mobileItemContainer .item-card');
-    const rowHeight = 9;
     let lastItemY = currentY;
 
     cards.forEach((card, index) => {
@@ -528,7 +533,7 @@ function buildJsPDFDocument() {
 
         let printY = currentY + (index * rowHeight);
         lastItemY = printY + rowHeight;
-        
+
         pdfDoc.setFont('Helvetica', 'normal');
         pdfDoc.setFontSize(8.5);
         pdfDoc.text((index + 1).toString(), startX + 5, printY + 5.5);
@@ -543,9 +548,9 @@ function buildJsPDFDocument() {
     if(projectNotesVal) {
         const parsedLines = pdfDoc.splitTextToSize(projectNotesVal, 88);
         const totalNoteLinesHeight = (parsedLines.length * 3.5) + 4;
-        
+
         let noteRenderY = tableHeaderY + maxTableHeight - 14 - totalNoteLinesHeight;
-        
+
         if (noteRenderY < lastItemY + 2) {
             noteRenderY = lastItemY + 3;
         }
@@ -559,7 +564,7 @@ function buildJsPDFDocument() {
 
     pdfDoc.rect(startX, tableHeaderY, widthTotal, maxTableHeight, 'D');
 
-    pdfDoc.line(startX + 15, tableHeaderY, startX + 15, tableHeaderY + maxTableHeight); 
+    pdfDoc.line(startX + 15, tableHeaderY, startX + 15, tableHeaderY + maxTableHeight);
     pdfDoc.line(startX + 108, tableHeaderY, startX + 108, tableHeaderY + maxTableHeight);
     pdfDoc.line(startX + 135, tableHeaderY, startX + 135, tableHeaderY + maxTableHeight);
     pdfDoc.line(startX + 162, tableHeaderY, startX + 162, tableHeaderY + maxTableHeight);
@@ -568,8 +573,8 @@ function buildJsPDFDocument() {
     const subtotalRaw = parseFloat(document.getElementById('uiSubtotal').innerText.replace(/[^0-9.-]+/g,'')) || 0;
     const grandTotalRaw = parseFloat(document.getElementById('uiGrandTotal').innerText.replace(/[^0-9.-]+/g,'')) || 0;
 
-    const totalRowsTopY = tableHeaderY + maxTableHeight - 14; 
-    
+    const totalRowsTopY = tableHeaderY + maxTableHeight - 14;
+
     pdfDoc.line(startX + 108, totalRowsTopY, startX + widthTotal, totalRowsTopY);
     pdfDoc.line(startX + 108, totalRowsTopY + 7, startX + widthTotal, totalRowsTopY + 7);
 
