@@ -5,7 +5,53 @@ import { Capacitor } from '@capacitor/core';
 import { COMPANY_LOGO_BASE64, COMPANY_SIGN_BASE64 } from './assets.js';
 
 let currentStep = 1;
-const totalSteps = 5;
+const totalSteps = 6;
+
+// Company Bank Accounts Configuration
+const BANK_ACCOUNTS = {
+    cub: {
+        bankName: 'CITY UNION BANK',
+        accountName: 'PRABHU R',
+        accountNumber: '500101014560130',
+        ifscCode: 'CIUB0000313',
+        branch: 'MADHAVARAM CHENNAI',
+        label: 'City Union Bank'
+    },
+    indian: {
+        bankName: 'INDIAN BANK',
+        accountName: 'PRABHU R',
+        accountNumber: '7460854061',
+        ifscCode: 'IDIB000M275',
+        branch: 'MADHAVARAM',
+        label: 'Indian Bank'
+    }
+};
+
+let selectedAccountKey = 'cub';
+
+function selectBankAccount(key) {
+    selectedAccountKey = key;
+    const acc = BANK_ACCOUNTS[key];
+    if (!acc) return;
+
+    // Update active card visual styling
+    document.querySelectorAll('.account-card').forEach(c => c.classList.remove('active'));
+    const targetCard = document.getElementById(`acc_card_${key}`);
+    if (targetCard) targetCard.classList.add('active');
+
+    // Populate bill print preview inputs
+    const bName = document.getElementById('bankName');
+    const bAccName = document.getElementById('bankAccName');
+    const bAccNo = document.getElementById('bankAccNo');
+    const bIfsc = document.getElementById('bankIfsc');
+    const bBadge = document.getElementById('selectedAccountBadge');
+
+    if (bName) bName.value = acc.bankName;
+    if (bAccName) bAccName.value = acc.accountName;
+    if (bAccNo) bAccNo.value = acc.accountNumber;
+    if (bIfsc) bIfsc.value = acc.ifscCode;
+    if (bBadge) bBadge.innerText = `Selected: ${acc.label}`;
+}
 
 // Expose all controller functions to window immediately for inline HTML event handlers
 window.jumpToStep = jumpToStep;
@@ -19,6 +65,7 @@ window.appendNotePreset = appendNotePreset;
 window.toggleClause = toggleClause;
 window.insertCustomClauseRow = insertCustomClauseRow;
 window.removeCustomClauseRow = removeCustomClauseRow;
+window.selectBankAccount = selectBankAccount;
 window.generateDocumentPDF = generateDocumentPDF;
 window.previewDocumentPDF = previewDocumentPDF;
 window.shareDocumentPDF = shareDocumentPDF;
@@ -581,16 +628,21 @@ function buildJsPDFDocument() {
     pdfDoc.rect(startX, currentY, 95, 26, 'D');
     pdfDoc.rect(startX + 95, currentY, 95, 26, 'D');
 
+    const bankName = (document.getElementById('bankName')?.value || 'CITY UNION BANK').trim();
+    const bankAccName = (document.getElementById('bankAccName')?.value || 'PRABHU R').trim();
+    const bankAccNo = (document.getElementById('bankAccNo')?.value || '500101014560130').trim();
+    const bankIfsc = (document.getElementById('bankIfsc')?.value || 'CIUB0000313').trim();
+
     pdfDoc.setFont('Helvetica', 'bold');
     pdfDoc.setFontSize(8.5);
     pdfDoc.text("COMPANY BANK DETAILS :", startX + 3, currentY + 5);
     pdfDoc.setFont('Helvetica', 'normal');
     pdfDoc.setFontSize(8);
     pdfDoc.text([
-        "BANK NAME : INDIAN BANK",
-        "ACCOUNT NAME : PRABHU R",
-        "ACCOUNT NUMBER : 7460854061",
-        "IFSC CODE : IDIB000M275-MADHAVARAM"
+        `BANK NAME : ${bankName}`,
+        `ACCOUNT NAME : ${bankAccName}`,
+        `ACCOUNT NUMBER : ${bankAccNo}`,
+        `IFSC CODE : ${bankIfsc}`
     ], startX + 3, currentY + 10, { leading: 5.5 });
 
     pdfDoc.setFont('Helvetica', 'bold');
@@ -789,6 +841,20 @@ function previewDocumentPDF() {
                     ${parseFloat(discount) > 0 ? `<div>Discount: ₹${discount}</div>` : ''}
                     <div>Grand Total: <span class="grand">${grandTotal}</span></div>
                 </div>
+
+                <div style="margin-top:12px; display:flex; justify-content:space-between; border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; font-size:0.75rem; background:#f8fafc;">
+                    <div>
+                        <strong style="color:#0f172a; font-size:0.75rem;">COMPANY BANK DETAILS:</strong><br>
+                        <strong>Bank:</strong> ${(document.getElementById('bankName')?.value || 'CITY UNION BANK').trim()}<br>
+                        <strong>Account Name:</strong> ${(document.getElementById('bankAccName')?.value || 'PRABHU R').trim()}<br>
+                        <strong>Account No:</strong> ${(document.getElementById('bankAccNo')?.value || '500101014560130').trim()}<br>
+                        <strong>IFSC:</strong> ${(document.getElementById('bankIfsc')?.value || 'CIUB0000313 - MADHAVARAM').trim()}
+                    </div>
+                    <div style="text-align:right; align-self:flex-end;">
+                        <strong>FOR SPARK PAINTERS</strong><br>
+                        <span style="font-size:0.7rem; color:#64748b;">Authorised Signature</span>
+                    </div>
+                </div>
             </div>
         </body>
         </html>
@@ -840,6 +906,9 @@ function saveCurrentBillDraft() {
         clientAddress: document.getElementById('clientAddress').value,
         notes: document.getElementById('customProjectNotes').value,
         total: document.getElementById('uiGrandTotal').innerText,
+        bankAccount: selectedAccountKey,
+        bankName: document.getElementById('bankName')?.value,
+        bankAccNo: document.getElementById('bankAccNo')?.value,
         savedAt: new Date().toLocaleString()
     };
 

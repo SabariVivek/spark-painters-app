@@ -68,6 +68,10 @@
             </div>
             <div class="progress-step" id="step_indicator_5" onclick="jumpToStep(5)">
                 <div class="progress-node">5</div>
+                <span class="progress-label">Account</span>
+            </div>
+            <div class="progress-step" id="step_indicator_6" onclick="jumpToStep(6)">
+                <div class="progress-node">6</div>
                 <span class="progress-label">Ledger</span>
             </div>
         </div>
@@ -187,8 +191,90 @@
                 </div>
             </div>
 
-            <!-- STEP 5: Financial Matrix & Export -->
+            <!-- STEP 5: Account Selection -->
             <div class="wizard-page" id="step_5">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon" style="background:#e0e7ff; color:#4338ca;">🏦</span> Bank Account
+                        </h2>
+                        <span class="badge" id="selectedAccountBadge" style="background:#e0e7ff; color:#3730a3; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:999px;">
+                            Selected: City Union Bank
+                        </span>
+                    </div>
+
+                    <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Select the company bank account to reflect on the bill for customer payment transfer:
+                    </p>
+
+                    <!-- Account Selection Cards Grid -->
+                    <div class="account-cards-grid">
+                        <!-- Account 1: City Union Bank (From Screenshot) -->
+                        <div class="account-card active" id="acc_card_cub" onclick="selectBankAccount('cub')">
+                            <div class="account-card-header">
+                                <div class="account-bank-identity">
+                                    <div class="bank-avatar cub-avatar">CUB</div>
+                                    <div>
+                                        <div class="bank-name">City Union Bank</div>
+                                        <div class="bank-branch">Branch : Madhavaram</div>
+                                    </div>
+                                </div>
+                                <div class="account-select-indicator">
+                                    <span class="check-icon">✓</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account 2: Indian Bank (Existing Account) -->
+                        <div class="account-card" id="acc_card_indian" onclick="selectBankAccount('indian')">
+                            <div class="account-card-header">
+                                <div class="account-bank-identity">
+                                    <div class="bank-avatar ib-avatar">IB</div>
+                                    <div>
+                                        <div class="bank-name">Indian Bank</div>
+                                        <div class="bank-branch">Branch : Madhavaram</div>
+                                    </div>
+                                </div>
+                                <div class="account-select-indicator">
+                                    <span class="check-icon">✓</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Editable Account Details & Bill Override -->
+                    <div class="card" style="margin-top: 1.25rem; background: var(--surface-alt); border: 1px dashed var(--border); padding: 1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-heading);">
+                                📝 Bill Print Details
+                            </span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);">Syncs with selection • Editable</span>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="bankName" style="font-size: 0.75rem;">Bank Name</label>
+                                <input type="text" id="bankName" value="CITY UNION BANK">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="bankAccName" style="font-size: 0.75rem;">Account Name</label>
+                                <input type="text" id="bankAccName" value="PRABHU R">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="bankAccNo" style="font-size: 0.75rem;">Account Number</label>
+                                <input type="text" id="bankAccNo" value="500101014560130">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="bankIfsc" style="font-size: 0.75rem;">IFSC & Branch Details</label>
+                                <input type="text" id="bankIfsc" value="CIUB0000313">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 6: Financial Matrix & Export -->
+            <div class="wizard-page" id="step_6">
                 <div class="card ledger-card">
                     <div class="card-header">
                         <h2 class="card-title">
